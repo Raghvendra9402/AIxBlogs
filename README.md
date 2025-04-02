@@ -24,6 +24,6 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ```bash
 DATABASE_URL=<postgres_db_url>
-# or
+
 AUTH_SECRET
 ```
