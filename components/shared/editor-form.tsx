@@ -19,13 +19,17 @@ import debounce from "lodash.debounce";
 import { useCallback, useEffect, useState } from "react";
 import { Loader, Loader2 } from "lucide-react";
 import FormTopBar from "./form-top-bar";
+import { useRouter } from "next/navigation";
 
 interface EditorFormProps {
   data: Blog;
 }
 
 export function EditorForm({ data }: EditorFormProps) {
+  const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const form = useForm<EditorSchema>({
     resolver: zodResolver(editorSchema),
     defaultValues: {
@@ -45,6 +49,31 @@ export function EditorForm({ data }: EditorFormProps) {
     }
   }
 
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      await axios.delete(`/api/write/${data.id}`);
+      toast.success("Blog deleted");
+      router.push("/blogs");
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handlePublish = async () => {
+    try {
+      setIsPublishing(true);
+      await axios.put(`/api/write/${data.id}/publish`);
+      toast.success("Blog published");
+      router.push("/blogs");
+    } catch (error) {
+      toast.error("Something went wrong");
+    } finally {
+      setIsPublishing(false);
+    }
+  };
   const debouncedSave = useCallback(debounce(onSubmit, 500), []);
 
   useEffect(() => {
@@ -57,7 +86,13 @@ export function EditorForm({ data }: EditorFormProps) {
 
   return (
     <>
-      <FormTopBar>
+      <FormTopBar
+        disabled
+        handleDelete={handleDelete}
+        disableDelete={isDeleting}
+        handlePublish={handlePublish}
+        disablePublish={isPublishing}
+      >
         <Button variant={"outline"} type="button">
           {isSaving ? (
             <div className="flex items-center gap-x-1">

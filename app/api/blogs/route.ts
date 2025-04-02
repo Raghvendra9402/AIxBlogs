@@ -19,6 +19,9 @@ export async function GET(req: NextRequest) {
     const PAGE_SIZE = 10;
 
     const blogs = await prisma.blog.findMany({
+      where: {
+        idPublished: true,
+      },
       include: {
         user: true,
       },

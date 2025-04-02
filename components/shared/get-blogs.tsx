@@ -3,7 +3,7 @@
 import kyInstance from "@/lib/kyInstance";
 import { Blog } from "@prisma/client";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { Loader } from "lucide-react";
+import { Calendar, Heart, Loader, MessageCircle } from "lucide-react";
 import { Button } from "../ui/button";
 import { BlogsPage } from "@/lib/types";
 import Image from "next/image";
@@ -14,6 +14,8 @@ import NoContent from "@/public/no-content.jpg";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import { Separator } from "../ui/separator";
+import { LoadingBlogsSkeleton } from "./Loading-blogs-skeleton";
 
 export default function GetBlogs() {
   const {
@@ -45,9 +47,14 @@ export default function GetBlogs() {
   const blogs = data?.pages.flatMap((page) => page.blogs) || [];
   if (status === "pending") {
     return (
-      <div className="h-full flex justify-center items-center">
-        <Loader className="size-6 animate-spin" />
-      </div>
+      // <div className="h-full flex justify-center items-center">
+      //   <Loader className="size-6 animate-spin" />
+      // </div>
+      <>
+        <LoadingBlogsSkeleton />
+        <LoadingBlogsSkeleton />
+        <LoadingBlogsSkeleton />
+      </>
     );
   }
 
@@ -78,24 +85,43 @@ export default function GetBlogs() {
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
       {blogs.map((blog) => (
-        <Card key={blog.id} className="my-2">
-          <CardHeader>
-            <CardTitle>{blog.title}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col">
-              <span className="text-sm text-slate-400">
-                {formatDistanceToNow(blog.createdAt, { addSuffix: true })}
-              </span>
-              {blog.updatedAt > blog.createdAt && (
-                <Badge variant={"outline"}>Edited</Badge>
-              )}
-              <Link href={`/explore/blogs/${blog.slug}`}>
-                <Button>Read</Button>
-              </Link>
+        <div key={blog.id}>
+          <Link href={`/explore/blogs/${blog.slug}`} className="cursor-pointer">
+            <div className="p-2 flex flex-col gap-y-2">
+              <div className="flex items-center gap-x-6">
+                <div className="flex items-center gap-x-1">
+                  <Image
+                    src={blog.user.image ?? "/unknown-user.png"}
+                    alt="user image"
+                    width={20}
+                    height={20}
+                  />
+                  <span>{blog.user.name}</span>
+                </div>
+
+                <Button variant={"outline"}>Follow</Button>
+              </div>
+              <h2 className="text-2xl font-bold">{blog.title}</h2>
+              <div className="flex items-center gap-x-6">
+                <div className="flex items-center">
+                  <Calendar className="size-4 mr-2" />
+                  <span className="text-sm text-slate-600">
+                    {formatDistanceToNow(blog.createdAt, { addSuffix: true })}
+                  </span>
+                </div>
+                <Button className="flex items-center" variant={"ghost"}>
+                  <Heart className="size-4 mr-2" />
+                  <span className="text-sm text-slate-600">1.4K</span>
+                </Button>
+                <Button className="flex items-center" variant={"ghost"}>
+                  <MessageCircle className="size-4 mr-2" />
+                  <span className="text-sm text-slate-600">60</span>
+                </Button>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </Link>
+          <Separator className="my-2 " />
+        </div>
       ))}
       {isFetchingNextPage && (
         <div className="flex justify-center py-4">

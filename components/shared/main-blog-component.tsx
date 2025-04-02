@@ -17,7 +17,17 @@ interface MainBlogComponentProps {
   data: BlogData;
 }
 
+function safeParseJSON(jsonString: string) {
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    console.error("Invalid JSON:", error);
+    return null;
+  }
+}
+
 export function MainBlogComponent({ data }: MainBlogComponentProps) {
+  const parsedContent = safeParseJSON(data.content);
   return (
     <div className="flex flex-col space-y-6 px-10">
       <div>
@@ -43,7 +53,11 @@ export function MainBlogComponent({ data }: MainBlogComponentProps) {
       </div>
       <div>{/**TODO:: LIKE FOLLOW SHARE TAB */}</div>
       <div>
-        <FormatEditorContent json={JSON.parse(data.content)} />
+        {parsedContent ? (
+          <FormatEditorContent json={parsedContent} />
+        ) : (
+          <p className="text-slate-500">No content available</p>
+        )}
       </div>
     </div>
   );

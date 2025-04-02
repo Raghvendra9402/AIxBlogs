@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { blogSchema } from "@/lib/form-schema";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -9,7 +8,9 @@ export async function PATCH(
 ) {
   try {
     const values = await req.json();
-
+    if (!values.title) {
+      return new NextResponse("Missing fields", { status: 422 });
+    }
     const session = await auth();
     const userId = session?.user?.id;
     if (!userId) {
@@ -27,11 +28,32 @@ export async function PATCH(
       },
       data: {
         ...values,
+        idPublished: false,
       },
     });
 
     return NextResponse.json(updatedBlog);
   } catch (error) {
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { blogId: string } }
+) {
+  try {
+    const { blogId } = await params;
+
+    const deletedBlog = await prisma.blog.delete({
+      where: {
+        id: blogId,
+      },
+    });
+
+    return NextResponse.json(deletedBlog);
+  } catch (error) {
+    console.log("[DELETE_ROUTE]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

@@ -1,26 +1,50 @@
-import { Trash2, Upload } from "lucide-react";
+import { Loader, Trash2, Upload } from "lucide-react";
 import { Button } from "../ui/button";
 
 const FormTopBar = ({
   children,
-  onClick,
+  handleDelete,
+  handlePublish,
   disabled,
+  disableDelete,
+  disablePublish,
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
+  handleDelete?: () => void;
+  handlePublish?: () => void;
   disabled?: boolean;
+  disableDelete: boolean;
+  disablePublish?: boolean;
 }) => {
   return (
     <div className="flex items-center justify-between p-2">
       <div>{children}</div>
       <div className="flex flex-row items-center gap-x-4">
-        <Button variant={"destructive"} onClick={onClick} disabled={disabled}>
-          <Trash2 className="size-4 mr-2" />
-          Delete
+        <Button
+          variant={"destructive"}
+          onClick={handleDelete}
+          disabled={disableDelete}
+          className="cursor-pointer"
+        >
+          {disableDelete ? (
+            <Loader className="size-4 mr-2 animate-spin" />
+          ) : (
+            <Trash2 className="size-4 mr-2" />
+          )}
+          {disableDelete ? "Deleting..." : "Delete"}
         </Button>
-        <Button variant={"outline"} onClick={onClick}>
-          <Upload className="size-4 mr-2" />
-          Publish
+        <Button
+          variant={"outline"}
+          onClick={handlePublish}
+          disabled={disablePublish}
+          className="cursor-pointer"
+        >
+          {disablePublish ? (
+            <Loader className="size-4 mr-2 animate-spin" />
+          ) : (
+            <Upload className="size-4 mr-2" />
+          )}
+          {disablePublish ? "Publishing" : "Publish"}
         </Button>
       </div>
     </div>
