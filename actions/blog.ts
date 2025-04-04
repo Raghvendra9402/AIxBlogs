@@ -7,7 +7,7 @@ import slugify from "slugify";
 
 export async function onBlogSubmit(values: { title: string }) {
   try {
-    const { title } = blogFormSchema.parse(values);
+    const { title, categoryId } = blogFormSchema.parse(values);
     const session = await auth();
     const userId = session?.user?.id;
 
@@ -29,6 +29,7 @@ export async function onBlogSubmit(values: { title: string }) {
       data: {
         title,
         slug: uniqueSlug,
+        categoryId,
         userId,
       },
     });

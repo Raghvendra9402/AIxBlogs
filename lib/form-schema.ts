@@ -56,6 +56,9 @@ export const blogFormSchema = z.object({
   title: z.string().min(2, {
     message: "Minimum 2 characters",
   }),
+  categoryId: z.string().min(1, {
+    message: "category is required",
+  }),
 });
 
 export type BlogFormSchema = z.infer<typeof blogFormSchema>;

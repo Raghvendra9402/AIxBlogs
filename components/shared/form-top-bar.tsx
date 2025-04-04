@@ -1,18 +1,20 @@
 import { Loader, Trash2, Upload } from "lucide-react";
 import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import { cn } from "@/lib/utils";
 
 const FormTopBar = ({
   children,
   handleDelete,
   handlePublish,
-  disabled,
+  published,
   disableDelete,
   disablePublish,
 }: {
   children: React.ReactNode;
   handleDelete?: () => void;
   handlePublish?: () => void;
-  disabled?: boolean;
+  published?: boolean;
   disableDelete: boolean;
   disablePublish?: boolean;
 }) => {
@@ -44,7 +46,7 @@ const FormTopBar = ({
           ) : (
             <Upload className="size-4 mr-2" />
           )}
-          {disablePublish ? "Publishing" : "Publish"}
+          {disablePublish ? "Publishing" : published ? "Published" : "Publish"}
         </Button>
       </div>
     </div>

@@ -17,13 +17,21 @@ import { blogFormSchema, BlogFormSchema } from "@/lib/form-schema";
 import toast from "react-hot-toast";
 import { onBlogSubmit } from "@/actions/blog";
 import { useRouter } from "next/navigation";
+import { Category } from "@prisma/client";
+import { Combobox } from "../ui/combobox";
 
-export function BlogForm() {
+interface BlogFormProps {
+  categoryData: Category[];
+  categoryOptions: { label: string; value: string }[];
+}
+
+export function BlogForm({ categoryData, categoryOptions }: BlogFormProps) {
   const router = useRouter();
   const form = useForm<BlogFormSchema>({
     resolver: zodResolver(blogFormSchema),
     defaultValues: {
       title: "",
+      categoryId: "",
     },
   });
 
@@ -57,6 +65,27 @@ export function BlogForm() {
               <FormMessage />
               <p className="text-xs text-gray-500 mt-0 italic">
                 Don't worry you can change your blog title anytime.
+              </p>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Combobox
+                  options={categoryOptions}
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+              <p className="text-xs text-gray-500 mt-0 italic">
+                You can't change it afterwards.
               </p>
             </FormItem>
           )}

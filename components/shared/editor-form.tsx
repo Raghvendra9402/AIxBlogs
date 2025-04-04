@@ -17,7 +17,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useState } from "react";
-import { Loader, Loader2 } from "lucide-react";
+import { Loader, Loader2, Sparkles } from "lucide-react";
 import FormTopBar from "./form-top-bar";
 import { useRouter } from "next/navigation";
 
@@ -87,7 +87,7 @@ export function EditorForm({ data }: EditorFormProps) {
   return (
     <>
       <FormTopBar
-        disabled
+        published={data.idPublished}
         handleDelete={handleDelete}
         disableDelete={isDeleting}
         handlePublish={handlePublish}
@@ -135,6 +135,12 @@ export function EditorForm({ data }: EditorFormProps) {
           />
         </form>
       </Form>
+      <div className="fixed bottom-8 right-8 flex items-center gap-2 p-3 bg-gray-900 text-white rounded-full shadow-md opacity-75 hover:opacity-100 transition-opacity">
+        <Sparkles className="size-5 stroke-yellow-400" />
+        <span className="hidden md:inline">
+          Press <b>Alt + Q</b> for AI Assist
+        </span>
+      </div>
     </>
   );
 }
