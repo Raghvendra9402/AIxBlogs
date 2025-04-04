@@ -2,19 +2,21 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, install all the dependencies
+First,install pnpm(skip if already installed)
 
 ```bash
-npm install
-# or
+npm i -g pnpm
+```
+
+Then, install all the dependencies
+
+```bash
 pnpm install
-# or
-bun install
 ```
 
 ## Environment variables
 
-add all these environment variables in .env in root folder
+add all these environment variables in .env file in root folder
 
 ```bash
 DATABASE_URL=<postgres_db_url>
@@ -29,13 +31,15 @@ GEMINI_API_KEY=<your-google-studio-api-key>
 run these commands
 
 ```bash
-npx prisma migrate dev --name init
-# or
 pnpx prisma migrate dev --name init
 
 node scripts/seed.ts
 ```
 
 ## Run the application
+
+```bash
+pnpm dev
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
