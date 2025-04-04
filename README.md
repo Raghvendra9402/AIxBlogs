@@ -25,5 +25,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 ```bash
 DATABASE_URL=<postgres_db_url>
 
-AUTH_SECRET
+AUTH_SECRET=<anything-secret-key>
+
+GEMINI_API_KEY=<your-google-studio-api-key>
 ```
