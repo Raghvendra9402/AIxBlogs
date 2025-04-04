@@ -2,25 +2,19 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, install all the dependencies
 
 ```bash
-npm run dev
+npm install
 # or
-yarn dev
+pnpm install
 # or
-pnpm dev
-# or
-bun dev
+bun install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
 ## Environment variables
+
+add all these environment variables in .env in root folder
 
 ```bash
 DATABASE_URL=<postgres_db_url>
@@ -29,3 +23,19 @@ AUTH_SECRET=<anything-secret-key>
 
 GEMINI_API_KEY=<your-google-studio-api-key>
 ```
+
+## Setup
+
+run these commands
+
+```bash
+npx prisma migrate dev --name init
+# or
+pnpx prisma migrate dev --name init
+
+node scripts/seed.ts
+```
+
+## Run the application
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
