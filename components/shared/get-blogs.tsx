@@ -1,23 +1,29 @@
 "use client";
 
 import kyInstance from "@/lib/kyInstance";
-import { Blog } from "@prisma/client";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { Calendar, Heart, Loader, MessageCircle } from "lucide-react";
-import { Button } from "../ui/button";
 import { BlogsPage } from "@/lib/types";
+import NoContent from "@/public/no-content.jpg";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { formatDistanceToNow } from "date-fns";
+import { Calendar, Heart, Loader, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { InfiniteScrollContainer } from "./infinite-scroll-container";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import NoContent from "@/public/no-content.jpg";
-import { Badge } from "../ui/badge";
-import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
+import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import { InfiniteScrollContainer } from "./infinite-scroll-container";
 import { LoadingBlogsSkeleton } from "./Loading-blogs-skeleton";
+import { useSearchParams } from "next/navigation";
+import { Category } from "@prisma/client";
+import { Categories } from "./categories";
+import { SearchInput } from "./search-input";
 
-export default function GetBlogs() {
+interface GetBlogsProps {
+  categoriesData: Category[];
+}
+export default function GetBlogs({ categoriesData }: GetBlogsProps) {
+  const searchParams = useSearchParams();
+  const categoryId = searchParams.get("categoryId");
+  const title = searchParams.get("title");
   const {
     data,
     fetchNextPage,
@@ -26,18 +32,20 @@ export default function GetBlogs() {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["blog"],
+    queryKey: ["blogs", categoryId, title],
     queryFn: ({ pageParam }) =>
       kyInstance
         .get(
           "/api/blogs",
-          pageParam
+          pageParam || categoryId || title
             ? {
                 searchParams: {
-                  cursor: pageParam,
+                  ...(pageParam && { cursor: pageParam }),
+                  ...(categoryId && { categoryId }),
+                  ...(title && { title }),
                 },
               }
-            : {}
+            : undefined
         )
         .json<BlogsPage>(),
     initialPageParam: null as string | null,
@@ -51,6 +59,7 @@ export default function GetBlogs() {
       //   <Loader className="size-6 animate-spin" />
       // </div>
       <>
+        <SearchInput />
         <LoadingBlogsSkeleton />
         <LoadingBlogsSkeleton />
         <LoadingBlogsSkeleton />
@@ -68,14 +77,18 @@ export default function GetBlogs() {
 
   if (status === "success" && !blogs.length && !hasNextPage) {
     return (
-      <div className="h-full flex flex-col gap-y-2 items-center justify-center">
-        <Image src={NoContent} alt="no-blogs" width={400} height={400} />
-        <Link href={"/write"}>
-          <Button variant={"outline"} size={"lg"}>
-            No blogs found. press to create one?
-          </Button>
-        </Link>
-      </div>
+      <>
+        <SearchInput />
+        <Categories items={categoriesData} />
+        <div className="h-full flex flex-col gap-y-2 items-center justify-center">
+          <Image src={NoContent} alt="no-blogs" width={400} height={400} />
+          <Link href={"/write"}>
+            <Button variant={"outline"} size={"lg"}>
+              No blogs found. press to create one?
+            </Button>
+          </Link>
+        </div>
+      </>
     );
   }
 
@@ -84,6 +97,8 @@ export default function GetBlogs() {
       className="space-y-5"
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
+      <SearchInput />
+      <Categories items={categoriesData} />
       {blogs.map((blog) => (
         <div key={blog.id}>
           <Link href={`/explore/blogs/${blog.slug}`} className="cursor-pointer">

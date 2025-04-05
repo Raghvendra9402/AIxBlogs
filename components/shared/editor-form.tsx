@@ -17,7 +17,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useState } from "react";
-import { Loader, Loader2, Sparkles } from "lucide-react";
+import { Loader, Sparkles } from "lucide-react";
 import FormTopBar from "./form-top-bar";
 import { useRouter } from "next/navigation";
 

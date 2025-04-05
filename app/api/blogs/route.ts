@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { userId } from "@/lib/session";
 import { BlogsPage } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,12 +14,21 @@ export async function GET(req: NextRequest) {
     if (!user) {
       return new NextResponse("Unauthorized", { status: 400 });
     }
+    const categoryId = req.nextUrl.searchParams.get("categoryId") || undefined;
+    const title = req.nextUrl.searchParams.get("title") || undefined;
     const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
     const PAGE_SIZE = 10;
 
     const blogs = await prisma.blog.findMany({
       where: {
         idPublished: true,
+        ...(categoryId && { categoryId }),
+        ...(title && {
+          title: {
+            contains: title,
+            mode: "insensitive",
+          },
+        }),
       },
       include: {
         user: true,

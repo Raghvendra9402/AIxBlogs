@@ -1,6 +1,5 @@
 import MobileSidebar from "./mobile-sidebar";
 import { NavbarRoutes } from "./navbar-router";
-import { UserAvatar } from "./user-avatar";
 
 export default function Navbar() {
   return (

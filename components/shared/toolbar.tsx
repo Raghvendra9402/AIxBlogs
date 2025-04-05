@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FaParagraph } from "react-icons/fa";
-import { useRef } from "react";
 
 interface ToolbarProps {
   editor: Editor | null;

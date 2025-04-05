@@ -1,7 +1,5 @@
 import { Loader, Trash2, Upload } from "lucide-react";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
-import { cn } from "@/lib/utils";
 
 const FormTopBar = ({
   children,

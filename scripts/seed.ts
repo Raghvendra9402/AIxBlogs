@@ -11,6 +11,15 @@ async function main() {
         { name: "Algorithms" },
         { name: "Web3" },
         { name: "UI/UX" },
+        { name: "Machine Learning" },
+        { name: "Artificial Intelligence" },
+        { name: "Blockchain" },
+        { name: "Mobile App Development" },
+        { name: "Cloud Computing" },
+        { name: "Cybersecurity" },
+        { name: "DevOps" },
+        { name: "Programming Languages" },
+        { name: "System Design" },
       ],
     });
   } catch (error) {
