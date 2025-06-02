@@ -31,7 +31,9 @@ GEMINI_API_KEY=<your-google-studio-api-key>
 run these commands
 
 ```bash
-pnpx prisma migrate dev --name init
+pnpx prisma generate
+
+pnpx prisma migrate dev
 
 node scripts/seed.ts
 ```
